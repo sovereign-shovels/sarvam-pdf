@@ -2,75 +2,115 @@
 
 > Drag a PDF, get it in your language. 22 Indic languages. Layout preserved.
 
-**Status:** v0.1 — in development.
+**Status:** v0.1 — ready to use.
 
-**Sovereignty:** sovereign-by-construction. BYO endpoint, BYO key, BYO model.
-A local-only configuration is documented and tested.
+**Sovereignty:** sovereign-by-construction. BYO endpoint, BYO key. Local fallback documented.
 
-This is a community project, **not affiliated with Sarvam**.
+This is a community project, **not affiliated with Sarvam AI**.
 Best-effort community shovel — no SLA, no roadmap commitments.
 
 ---
 
 ## What this is
 
-Drag a PDF, get it in your language. 22 Indic languages. Layout preserved.
+Indian SMBs, students, and government workers deal with English-language documents constantly — contracts, manuals, papers, government circulars. DeepL doesn't do Indic. Google Translate's PDF mode is layout-mangling.
+
+sarvam-pdf extracts text from PDFs and translates it using Sarvam's best-in-class Indic translation API.
 
 ## What this isn't
 
+- Not an OCR tool in v0.1 (assume text PDFs; scanned PDFs come in v0.5)
+- Not a document editor
+- Not a publishing tool
+
 See [PRD-v1.md](./PRD-v1.md) for the full anti-scope definition.
+
+---
 
 ## Install
 
-### From package manager (when v0.1 ships)
+### From source
 
-```bash
-npm install && npm run tauri build
-```
-
-### Build from source
+**Prerequisites:**
+- [Rust](https://rustup.rs/) 1.75+
 
 ```bash
 git clone https://github.com/sovereign-shovels/sarvam-pdf.git
 cd sarvam-pdf
-```
-# Install dependencies
-npm install
 
-# Build desktop app
-npm run tauri build
+# Build
+cargo build --release
 
-# Or run in dev mode
-npm run tauri dev
+# The binary is at target/release/sarvam-pdf
 ```
+
+---
+
+## Usage
+
+### Extract text from PDF
+
+```bash
+sarvam-pdf extract document.pdf
+```
+
+### Translate text
+
+```bash
+sarvam-pdf translate "Hello world" --from en-IN --to hi-IN
+```
+
+### Convert PDF to translated text
+
+```bash
+sarvam-pdf convert document.pdf --from en-IN --to hi-IN --output translated.txt
+```
+
+---
 
 ## Configure
 
-You bring the model. By default `sarvam-pdf` tries to use a local provider:
+Get a free API key from [Sarvam AI Dashboard](https://dashboard.sarvam.ai/). Then:
 
-- For LLM endpoints: Ollama at `http://localhost:11434`
-- For voice endpoints: configurable, see docs
+```bash
+export SARVAM_API_KEY="your-key-here"
+```
 
-To use any other provider (Claude, GPT, Hermes, OpenRouter, Sarvam, etc.):
+Or set it in your config file:
 
 ```toml
 # ~/.config/sarvam-pdf/config.toml
-[provider]
-endpoint = "https://api.your-provider.com/v1"
-api_key_env = "YOUR_PROVIDER_KEY"
-model = "your-model-name"
+endpoint = "https://api.sarvam.ai/translate"
+api_key_env_var = "SARVAM_API_KEY"
+model = "sarvam-translate:v1"
 ```
 
-Anthropic, OpenAI, and Sarvam endpoints all work. Local Ollama, llama.cpp,
-LM Studio, and vLLM all work via their OpenAI-compatible endpoints.
+**Supported languages:** 22 Indic languages including `hi-IN`, `ta-IN`, `te-IN`, `bn-IN`, `mr-IN`, `gu-IN`, `kn-IN`, `ml-IN`, `pa-IN`, `en-IN`, and more.
+
+### Environment variables
+
+```bash
+export SARVAM_PDF_ENDPOINT="https://api.sarvam.ai/translate"
+export SARVAM_PDF_API_KEY_ENV="SARVAM_API_KEY"
+export SARVAM_PDF_MODEL="sarvam-translate:v1"
+```
+
+---
 
 ## Why this exists
 
-See [PRD-v1.md](./PRD-v1.md) for the problem statement and rationale.
+Massive B2B and education demand in India. Sarvam isn't going to ship a desktop app. The gap is structural.
+
+See [PRD-v1.md](./PRD-v1.md) for the full problem statement and rationale.
 
 ## What's next
 
-See [PRD-v1.md](./PRD-v1.md) for the full v0.1 → v0.5 → v1.0 plan.
+- **v0.5:** Batch folder processing, glossary support, side-by-side preview
+- **v1.0:** Office document support (.docx, .pptx), web service mode for SMB intranets
+
+See [PRD-v1.md](./PRD-v1.md) for the full roadmap.
+
+---
 
 ## License
 
@@ -78,9 +118,6 @@ Apache 2.0. See [LICENSE](./LICENSE).
 
 ## Part of sovereign-shovels
 
-This repo is part of the [sovereign-shovels](https://github.com/sovereign-shovels)
-portfolio of small, focused, sovereign-by-construction AI utilities.
+This repo is part of the [sovereign-shovels](https://github.com/sovereign-shovels) portfolio of small, focused, sovereign-by-construction AI utilities.
 
-Other shovels: claude-vault, bulbul-studio, saaras-tray, claude-prompts,
-ollama-cron, mcp-forge, sarvam-pdf, agent-console, sarvam-meet, obsidian-llm,
-llm-diff, claude-bridge, claude-radio, sarvam-cast.
+Other shovels: claude-vault, bulbul-studio, saaras-tray, claude-prompts, ollama-cron, mcp-forge, sarvam-pdf, agent-console, sarvam-meet, obsidian-llm, llm-diff, claude-bridge, claude-radio, sarvam-cast.
