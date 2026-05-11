@@ -61,3 +61,4 @@ What we're monitoring (from PRD-v1):
 Adobe Acrobat or Microsoft 365 shipping inline Indic translation. Plausible in 12–18 months.
 
 Status: not triggered.
+- 2026-05-10 — hardened against local Ollama — all CLI paths verified, compile+tests green

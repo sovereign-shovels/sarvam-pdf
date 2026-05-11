@@ -11,6 +11,22 @@ Best-effort community shovel — no SLA, no roadmap commitments.
 
 ---
 
+## Architecture
+
+```
+┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│   PDF file  │────▶│   sarvam-    │────▶│   lopdf         │
+│  (text or   │     │   pdf        │     │   (text extract)│
+│   scanned)  │     │  (Rust CLI)  │     └─────────────────┘
+└─────────────┘     └──────────────┘              │
+                           │                      ▼
+                           ▼               ┌─────────────────┐
+                    ┌──────────────┐       │   Sarvam API    │
+                    │  translated  │◀─────│   (Indic trans) │
+                    │  .txt / .md  │       └─────────────────┘
+                    └──────────────┘
+```
+
 ## What this is
 
 Indian SMBs, students, and government workers deal with English-language documents constantly — contracts, manuals, papers, government circulars. DeepL doesn't do Indic. Google Translate's PDF mode is layout-mangling.
@@ -65,6 +81,8 @@ sarvam-pdf translate "Hello world" --from en-IN --to hi-IN
 ```bash
 sarvam-pdf convert document.pdf --from en-IN --to hi-IN --output translated.txt
 ```
+
+**Verified:** `cargo test` passes (1 test). Compile clean. Live translation requires `SARVAM_API_KEY`.
 
 ---
 
